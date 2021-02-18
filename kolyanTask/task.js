@@ -44,7 +44,7 @@ class Aircraft {
             if (count <= 2) {
                 this.motors = count;
             } 
-            
+
             throw new MotorCountError('Unacceptable motor count!')
         }
         if (this.type === AIRCRAFT_TYPES.copter) {
@@ -60,9 +60,9 @@ class Aircraft {
     addPropeller(diam, pitch) {
         if (this.type == null) {
             throw new AircraftTypeError('Aircraft type not set!')
-        } else {
+        } 
+        
         this.propeller.diameter = diam;
         this.propeller.pitch = pitch;
-        }
     }   
 }
