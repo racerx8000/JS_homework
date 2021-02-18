@@ -1,6 +1,6 @@
 const AIRCRAFT_TYPES = {
-    type1: `plane`,
-    type2: `copter`,
+    plane: 'plane',
+    copter: 'copter',
 }
 
 class AircraftTypeError extends Error {
@@ -10,46 +10,52 @@ class AircraftTypeError extends Error {
     }
 }
 
-
+class MotorCountError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'MotorTypeError'
+    }
+}
 
 class Aircraft {
     constructor() {}
     
     type = null;
+    motors = 0;
+    propeller = {};
 
     setType(type) {
         let arrOfTypes = Object.values(AIRCRAFT_TYPES)
 
         if (!arrOfTypes.includes(type)) {
-            throw new AircraftTypeError(`Wrong aircraft type!`)
+            throw new AircraftTypeError('Wrong aircraft type!')
         } 
 
         this.type = type; 
     }
 
-    motors = 0;
+    
 
     addMotors(count) {
         if (this.type == null) {
             throw new AircraftTypeError('Aircraft type not set!')
         }
-        if (this.type === AIRCRAFT_TYPES.type1) {
+        if (this.type === AIRCRAFT_TYPES.plane) {
             if (count <= 2) {
                 this.motors = count;
-            } else  {
-                throw new AircraftTypeError('Unacceptable motor count!')
-            }
+            } 
+            
+            throw new MotorCountError('Unacceptable motor count!')
         }
-        if (this.type === AIRCRAFT_TYPES.type2) {
-            if ((count > 3) && (count <= 8)) {
+        if (this.type === AIRCRAFT_TYPES.copter) {
+            if ((count >= 3) && (count <= 8)) {
                 this.motors = count;
-            } else {
-                throw new AircraftTypeError('Unacceptable motor count!')
             }
+
+            throw new MotorCountError('Unacceptable motor count!')
+            
         }
     }
-
-    propeller = {};
 
     addPropeller(diam, pitch) {
         if (this.type == null) {
