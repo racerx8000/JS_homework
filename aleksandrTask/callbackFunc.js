@@ -4,12 +4,10 @@
 
 
 const timeout = function (msec, callback) {
-  const result = setTimeout(() => {
-  console.log('resloved');
+  setTimeout(() => {
+    callback('resolved')
   }, msec);
-  callback(result);
+
 };
 
-timeout(3 * 1000, function() {
-  return;
-});
+timeout(3 * 1000, (result) => console.log(result));
