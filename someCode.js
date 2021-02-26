@@ -6,6 +6,13 @@ function divide(a, b) {
     return a / b;
 }
 
+<<<<<<< HEAD
 function multiply(a, b) {
     return a * b;
 }
+=======
+function calculate(a, b, c) {
+    let mulitplyRes = multiply(a, b);
+    return divide(mulitplyRes, c);
+}
+>>>>>>> calculate func
