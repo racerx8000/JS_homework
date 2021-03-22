@@ -15,40 +15,50 @@ class Aircraft {
 
   setType(type) {
     const arrOfTypes = Object.values(AIRCRAFT_TYPES);
-
-    if (!arrOfTypes.includes(type)) {
+    const aircraftTypeCheck = arrOfTypes.includes(type);
+    if (!aircraftTypeCheck) {
       throw new AircraftTypeError('Wrong aircraft type!');
     }
-
     this.type = type;
   }
 
-  addMotors(count) {
-    if (this.type == null) {
+  addMotors(motorCount) {
+    const aircraftType = this.type;
+    if (aircraftType === null) {
       throw new AircraftTypeError('Aircraft type not set!');
     }
-    if (this.type === AIRCRAFT_TYPES.plane) {
-      if (count > 2) {
-        throw new MotorCountError('Unacceptable motor count!');
-      }
-      this.motors = count;
-    }
-    if (this.type === AIRCRAFT_TYPES.copter) {
-      if ((count < 3) || (count > 8)) {
-        throw new MotorCountError('Unacceptable motor count!');
-      }
-      this.motors = count;
-    }
+
+    const planeAircraft = AIRCRAFT_TYPES.plane;
+    const wrongPlaneMotorCount = motorCount > 2;
+    if ((aircraftType === planeAircraft) && wrongPlaneMotorCount) {
+      throw new MotorCountError('Unacceptable motor count!');
+    } else { this.motors = motorCount; }
+
+    const copterAircraft = AIRCRAFT_TYPES.copter;
+    const wrongСopterMotorCount = (motorCount < 3) || (motorCount > 8);
+    if ((aircraftType === copterAircraft) && wrongСopterMotorCount) {
+      throw new MotorCountError('Unacceptable motor count!');
+    } else { this.motors = motorCount; }
   }
 
-  addPropeller(diam, pitch) {
-    if (this.type === null) {
+  addPropeller(propDiam, propPitch) {
+    const aircraftType = this.type;
+    const propellerObj = this.propeller;
+
+    if (aircraftType === null) {
       throw new AircraftTypeError('Aircraft type not set!');
     }
 
-    this.propeller.diameter = diam;
-    this.propeller.pitch = pitch;
+    propellerObj.diameter = propDiam;
+    propellerObj.pitch = propPitch;
   }
 }
 
 module.exports = Aircraft;
+
+const plane = new Aircraft();
+
+plane.setType('plane');
+plane.addMotors(2);
+
+console.log(plane.motors);
