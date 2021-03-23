@@ -1,10 +1,6 @@
 const AircraftTypeError = require('./AircraftTypeError');
 const MotorCountError = require('./MotorCountError');
-
-const AIRCRAFT_TYPES = {
-  plane: 'plane',
-  copter: 'copter',
-};
+const AIRCRAFT_TYPES = require('./AIRCRAFT_TYPES');
 
 class Aircraft {
   type = null;

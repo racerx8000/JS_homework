@@ -1,10 +1,11 @@
 const Aircraft = require('./Aircraft');
 const AircraftTypeError = require('./AircraftTypeError');
 const FuelLevelError = require('./FuelLevelError');
+const AIRCRAFT_TYPES = require('./AIRCRAFT_TYPES');
 
 class FuelAircraft extends Aircraft {
   setType(type) {
-    if (type !== 'plane') {
+    if (type !== AIRCRAFT_TYPES.plane) {
       throw new AircraftTypeError('Wrong aircraft type!');
     }
     super.setType(type);
@@ -20,8 +21,7 @@ class FuelAircraft extends Aircraft {
     }
     setTimeout(() => {
       this.fuelQuantity += addFuel;
-      console.log(this.fuelQuantity);
-    }, 2000);
+    }, (addFuel * 1000));
   }
 }
 
