@@ -19,9 +19,12 @@ class FuelAircraft extends Aircraft {
     if (addFuel > (this.tankCapacity - this.fuelQuantity)) {
       throw new FuelLevelError('Uncceptable fuel quantity!');
     }
-    setTimeout(() => {
-      this.fuelQuantity += addFuel;
-    }, (addFuel * 1000));
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.fuelQuantity += addFuel;
+        resolve();
+      }, (addFuel * 1000));
+    });
   }
 }
 
