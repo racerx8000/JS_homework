@@ -1,84 +1,109 @@
+0// ----------------Javascript begins-----------------------------
 
-const button = 'Add task';
-const markup = `
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+// let inputText;
+// let setNewId = 0;
+let tasks = [
+  {id: 1, isCompleted: false, isEditing: false, content: 'cook barbeque'},
+  {id: 2, isCompleted: true, isEditing: false, content: 'cook WOK'},
+  {id: 3, isCompleted: false, isEditing: false, content: 'cycling'},
+];
+
+function deleteTask(id) {
+  tasks = tasks.map(task => {
+    if (id == task.id) return null;
+    return task;
+  }).filter(Boolean);
+
+  render();
+}
+
+function editTask(id) {
+  tasks = tasks.map(task => {
+    if (id == task.id) return {...task, isEditing: true};
+    return task;
+  }).filter(Boolean);
+  
+  render();
+}
+
+function editableRow({ id, content, isCompleted, isEditing}) {
+  if (isEditing) return `<input type="text" class="text-edit">
+  <button class="save-button" onClick="" type="button">💾</button>`;
+  
+  return `${isCompleted === true ? `<s>${content}</s>` : `<span onclick="editTask(${id})">${content}</span>`}`
+}
+
+
+function renderListRow(task) {
+  const { id, isCompleted } = task;
+  return `<li>
+    <input onclick="changeState(${id})" class="task-state" type="checkbox" ${isCompleted === true ? 'checked' : ''}>
+    ${editableRow(task)}
+    <button onclick="deleteTask(${id})" type="button">
+    X
+    </button>
+  </li>
+  `
+}
+
+function renderList() {
+  const todo = tasks.map(task => `${renderListRow(task)}`).join('');
+
+  return `
+    <ul>
+      ${todo}
+    </ul>
+  `
+}
+
+function changeState(id) {
+  tasks = tasks.map(task => {
+    if (id == task.id) return { ...task, isCompleted: !task.isCompleted }
+    return task;
+  });
+
+  render();
+}
+
+function setListeners() {
+  document.querySelector('.submit-button').addEventListener('click', () => {
+    const data = document.querySelector('.text-input').value;
+
+    tasks = [...tasks, {id: uuidv4(), isCompleted: false, isEditing: false, content: data}];
+
+    render();
+  });
+
+  // const taskStates = document.querySelectorAll('.task-state');
+  // taskStates.forEach(task => {
+  //   task.addEventListener('click', (e) => {
+
+  // })
+  
+}
+
+function render() {
+  document.body.innerHTML = `
   <div class="input-form">
     <form action="">
       <input type="text" class="text-input">
       <button class="submit-button" type="button">
-      ${button}
+      Add task
       </button>
     </form>
   </div>
-`;
+  <div class="tasks-container">
+    ${renderList()} 
+  </div>
+  `;
 
-document.body.innerHTML = markup;
-
-// ----------------Javascript begins-----------------------------
-
-const submitBtn = document.querySelector('.submit-button')
-
-
-let inputText;
-let setNewId = 0;
-let arrOfId = [];
-
-function getId() {
-  arrOfId.push(setNewId);
-  setNewId++;
-  // return this.id;
+  setListeners()
 }
 
-function appendNewText() {
-  const task = document.createElement('div');
-
-  let newText = document.createElement('p');
-  
-  inputText = document.querySelector('.text-input').value;
-  newText.innerHTML = (`
-    <button class="task-completed" type="button">
-    </button>
-    ${inputText}
-  `);
-  newText.className = 'new-task';
-  newText.id = setNewId;
-  task.append(newText);
-  document.body.append(task);
-  document.querySelector('.text-input').value = '';
-
-  getId();
-}
-
-function crossedText(clickedId) {
-  // () => {
-  //   let foundId = arrOfId.find( id => );
-  //   newId = foundId;
-  // }
-  let textOutput = document.getElementById(clickedId);
-
-  textOutput.innerHTML = (`
-    <s>
-      ${textOutput.textContent}
-    </s>
-  `)
-}
-
-submitBtn.addEventListener('click', () => {
-  appendNewText();
-
-  const taskCompletedBtn = document.querySelector('.task-completed');
-
-  taskCompletedBtn.addEventListener ('click', crossedText());
-  
-  // let task = `
-  //   <div>
-  //     <p class="new-text">
-  //       <button class="task-completed" type="button">
-  //       </button>
-  //       ${inputText}
-  //     </p>
-  //   </div>
-  // `
-
-  
-  // taskCompletedBtn.addEventListener ('click', )
-})
+render()
