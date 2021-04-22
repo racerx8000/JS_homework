@@ -1,4 +1,4 @@
-0// ----------------Javascript begins-----------------------------
+// ----------------Javascript begins-----------------------------
 
 function uuidv4() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -9,14 +9,14 @@ function uuidv4() {
 // let inputText;
 // let setNewId = 0;
 let tasks = [
-  {id: 1, isCompleted: false, isEditing: false, content: 'cook barbeque'},
-  {id: 2, isCompleted: true, isEditing: false, content: 'cook WOK'},
-  {id: 3, isCompleted: false, isEditing: false, content: 'cycling'},
+  { id: uuidv4(), isCompleted: false, isEditing: false, content: 'cook barbeque' },
+  { id: uuidv4(), isCompleted: true, isEditing: false, content: 'cook WOK' },
+  { id: uuidv4(), isCompleted: false, isEditing: false, content: 'cycling' },
 ];
 
 function deleteTask(id) {
   tasks = tasks.map(task => {
-    if (id == task.id) return null;
+    if (id === task.id) return null;
     return task;
   }).filter(Boolean);
 
@@ -25,30 +25,50 @@ function deleteTask(id) {
 
 function editTask(id) {
   tasks = tasks.map(task => {
-    if (id == task.id) return {...task, isEditing: true};
+    if (id === task.id) return {...task, isEditing: true};
     return task;
   }).filter(Boolean);
   
   render();
 }
 
-function editableRow({ id, content, isCompleted, isEditing}) {
-  if (isEditing) return `<input type="text" class="text-edit">
-  <button class="save-button" onClick="" type="button">💾</button>`;
+function formOnBlur(id) {
+  tasks = tasks.map(task => {
+    if (id === task.id) return {...task, isEditing: false};
+    return task;
+  })
+
+  render();
+}
+
+function saveEditedTask(id) {
+  const editedContent = document.querySelector('.text-edit').value;
+  tasks = tasks.map(task => {
+    if (id === task.id) return {...task, isEditing: false, content: editedContent};
+    return task;
+  })
+
+  render();
+}
+
+function editableRow({id, content, isCompleted, isEditing}) {
+  if (isEditing) return `<input onblur="formOnBlur('${id}')" type="text" class="text-edit" value="${content}">
+  <button onclick="saveEditedTask('${id}')" class="save-button" type="button">💾</button>`;
   
-  return `${isCompleted === true ? `<s>${content}</s>` : `<span onclick="editTask(${id})">${content}</span>`}`
+  return `${isCompleted === true ? `<s>${content}</s>` : `<span onclick="editTask('${id}')">${content}</span>`}`
 }
 
 
 function renderListRow(task) {
   const { id, isCompleted } = task;
-  return `<li>
-    <input onclick="changeState(${id})" class="task-state" type="checkbox" ${isCompleted === true ? 'checked' : ''}>
-    ${editableRow(task)}
-    <button onclick="deleteTask(${id})" type="button">
-    X
-    </button>
-  </li>
+  return `
+    <li>
+      <input onclick="changeState('${id}')" class="task-state" type="checkbox" ${isCompleted === true ? 'checked' : ''}>
+      ${editableRow(task)}
+      <button onclick="deleteTask('${id}')" type="button">
+      X
+      </button>
+    </li>
   `
 }
 
@@ -64,7 +84,7 @@ function renderList() {
 
 function changeState(id) {
   tasks = tasks.map(task => {
-    if (id == task.id) return { ...task, isCompleted: !task.isCompleted }
+    if (id === task.id) return { ...task, isCompleted: !task.isCompleted }
     return task;
   });
 
