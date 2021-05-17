@@ -1,7 +1,31 @@
-.task-completed {
-  width: 4px;    
-  height: 15px;
+.dropbtn {
+  background-color: #4272f5;
+  color: white;
+  font-size: 9px;
+  padding: 4px;
+  border: 2px solid black;
+  border-radius: 8px;
 }
-.new-text {
-  font-size: 30px;
+
+
+.dropdown {
+  display: inline-block;
+  position: relative;
 }
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: rgba(212, 209, 209, 0.589);
+  z-index: 1;
+}
+
+.dropdown-content p {
+  padding: 15px;
+  border-radius: 3px;
+  display: block;
+}
+
+.dropdown:hover .dropdown-content {display: block};
+
