@@ -21,15 +21,10 @@ let tasks = [
   { id: uuidv4(), isCompleted: false, isEditing: false, colorList: colors, color: undefined, content: 'cycling' },
 ];
 
-function changeColor(id, clr) {
+function changeColor(id, newClr) {
   tasks = tasks.map(task => {
     if (id === task.id) {
-      const colorValues = document.querySelector('.dropdown-content').children.value;
-      for (let element of colorValues) {
-        if (element === clr) {
-          return {...task, color: element};
-        }
-      }
+      return {...task, color: newClr};
     }
     return task;
   })
@@ -97,10 +92,10 @@ function renderListRow(task) {
         <button class="dropbtn">clr</button>
         <div class="dropdown-content">
           <p onclick="changeColor('${id}','${red}')" value="${red}" style="background-color:${red}"></p>
-          <p onclick="changeColor('${id}')" value="${green}" style="background-color:${green}"></p>
-          <p onclick="changeColor('${id}')" value="${blue}" style="background-color:${blue}"></p>
-          <p onclick="changeColor('${id}')" value="${purple}" style="background-color:${purple}"></p>
-          <p onclick="changeColor('${id}')" value="${black}" style="background-color:${black}"></p>
+          <p onclick="changeColor('${id}','${green}')" value="${green}" style="background-color:${green}"></p>
+          <p onclick="changeColor('${id}','${blue}')" value="${blue}" style="background-color:${blue}"></p>
+          <p onclick="changeColor('${id}','${purple}')" value="${purple}" style="background-color:${purple}"></p>
+          <p onclick="changeColor('${id}','${black}')" value="${black}" style="background-color:${black}"></p>
         </div>
       </span>
       <button onclick="deleteTask('${id}')" type="button">
