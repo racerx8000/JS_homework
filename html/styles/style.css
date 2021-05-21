@@ -29,6 +29,11 @@ ul {
   list-style-type: none;
 }
 
+li {
+  list-style: none;
+  margin: auto;
+}
+
 .dropbtn {
   padding: 4px;
   border: 2px solid black;

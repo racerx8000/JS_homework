@@ -15,6 +15,7 @@ const colors = {
 
 Object.freeze(colors);
 
+
 let tasks = [
   { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cook barbeque' },
   { id: uuidv4(), isCompleted: true, isEditing: false, color: undefined, content: 'cook WOK' },
@@ -22,13 +23,11 @@ let tasks = [
 ];
 
 function drop(dropEvent) {
-  dropEvent.preventDefault();
-  const data = dropEvent.dataTransfer.getData("html");
-  dropEvent.target.append(document.getElementById(data));
+  dropEvent.target.append(selectedElement);
 }
 
-function drag(dragEvent) {
-  dragEvent.dataTransfer.setData("html", dragEvent.target.id);
+function drag(dragStartEvent) {
+  selectedElement = dragStartEvent.target;
 }
 
 function allowDrop(allowDropEvent) {
@@ -99,7 +98,7 @@ function renderListRow(task) {
   const { id, isCompleted, color } = task;
   const { red, green, blue, purple, black } = colors;
   return `
-    <li class="draggable-elem" id="${id}" draggable="true" ondrag="drag()">
+    <li class="draggable-elem" id="${id}" draggable="true" ondrag="drag(event)">
       <span class="dropdown">
         <button class="dropbtn" style="background-color:${color}"></button>
         <div class="dropdown-content">
@@ -151,23 +150,15 @@ function setListeners() {
   if (saveButton) saveButton.addEventListener('mousedown', event => {
     event.preventDefault();
   });
-
-//   const taskStates = document.querySelectorAll('.text-edit');
-//   taskStates.forEach(task => {
-//     task.addEventListener('blur', (e) => {
-//       console.log(e.target, e.currentTarget)
-//   })
-  
-// })
 }
 
 function render() {
   document.body.innerHTML = `
   <div class="task-row-wrapper">
-    <div class="tasks-container" ondrop="drop()" ondragover="allowDrop()">
+    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
       ${renderList()} 
     </div>
-    <div class="tasks-container" ondrop="drop()" ondragover="allowDrop()"></div>
+    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
   </div>
   <div class="input-form">
   <form action="">
