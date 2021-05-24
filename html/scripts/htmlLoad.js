@@ -15,11 +15,24 @@ const colors = {
 
 Object.freeze(colors);
 
+
 let tasks = [
-  { id: uuidv4(), isCompleted: false, isEditing: false, colorList: colors, color: undefined, content: 'cook barbeque' },
-  { id: uuidv4(), isCompleted: true, isEditing: false, colorList: colors, color: undefined, content: 'cook WOK' },
-  { id: uuidv4(), isCompleted: false, isEditing: false, colorList: colors, color: undefined, content: 'cycling' },
+  { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cook barbeque' },
+  { id: uuidv4(), isCompleted: true, isEditing: false, color: undefined, content: 'cook WOK' },
+  { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cycling' },
 ];
+
+function drop(dropEvent) {
+  dropEvent.target.append(selectedElement);
+}
+
+function drag(dragStartEvent) {
+  selectedElement = dragStartEvent.target;
+}
+
+function allowDrop(allowDropEvent) {
+  allowDropEvent.preventDefault();
+}
 
 function changeColor(id, newClr) {
   tasks = tasks.map(task => {
@@ -71,33 +84,33 @@ function saveEditedTask(id) {
   render();
 }
 
-function editableRow({id, content, isCompleted, isEditing, color}) {
+function editableRow({id, content, isCompleted, isEditing}) {
   if (isEditing) return `
     <input  onblur="formOnBlur('${id}')" type="text" class="text-edit" value="${content}">
     <button onclick="saveEditedTask('${id}')" class="save-button" type="button">💾</button>
   `;
   
-  return isCompleted ? `<s>${content}</s>` : `<span style="color:${color}" onclick="editTask('${id}')">${content}</span>`;
+  return isCompleted ? `<s>${content}</s>` : `<span onclick="editTask('${id}')">${content}</span>`;
 }
 
 
 function renderListRow(task) {
-  const { id, isCompleted } = task;
-  const { red, green, blue, purple, black } = task.colorList
+  const { id, isCompleted, color } = task;
+  const { red, green, blue, purple, black } = colors;
   return `
-    <li>
-      <input onclick="changeState('${id}')" class="task-state" type="checkbox" ${isCompleted ? 'checked' : ''}>
-      ${editableRow(task)}
+    <li class="draggable-elem" id="${id}" draggable="true" ondrag="drag(event)">
       <span class="dropdown">
-        <button class="dropbtn">clr</button>
+        <button class="dropbtn" style="background-color:${color}"></button>
         <div class="dropdown-content">
-          <p onclick="changeColor('${id}','${red}')" value="${red}" style="background-color:${red}"></p>
-          <p onclick="changeColor('${id}','${green}')" value="${green}" style="background-color:${green}"></p>
-          <p onclick="changeColor('${id}','${blue}')" value="${blue}" style="background-color:${blue}"></p>
-          <p onclick="changeColor('${id}','${purple}')" value="${purple}" style="background-color:${purple}"></p>
-          <p onclick="changeColor('${id}','${black}')" value="${black}" style="background-color:${black}"></p>
+          <p onclick="changeColor('${id}','${red}')"  style="background-color:${red}"></p>
+          <p onclick="changeColor('${id}','${green}')" style="background-color:${green}"></p>
+          <p onclick="changeColor('${id}','${blue}')" style="background-color:${blue}"></p>
+          <p onclick="changeColor('${id}','${purple}')" style="background-color:${purple}"></p>
+          <p onclick="changeColor('${id}','${black}')" style="background-color:${black}"></p>
         </div>
       </span>
+      <input onclick="changeState('${id}')" class="task-state" type="checkbox" ${isCompleted ? 'checked' : ''}>
+      ${editableRow(task)}
       <button onclick="deleteTask('${id}')" type="button">
         X
       </button>
@@ -128,7 +141,7 @@ function setListeners() {
   document.querySelector('.submit-button').addEventListener('click', () => {
     const data = document.querySelector('.text-input').value;
 
-    tasks = [...tasks, {id: uuidv4(), isCompleted: false, isEditing: false, colorList: colors, content: data}];
+    tasks = [...tasks, {id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: data}];
 
     render();
   });
@@ -137,30 +150,23 @@ function setListeners() {
   if (saveButton) saveButton.addEventListener('mousedown', event => {
     event.preventDefault();
   });
-
-//   const taskStates = document.querySelectorAll('.text-edit');
-//   taskStates.forEach(task => {
-//     task.addEventListener('blur', (e) => {
-//       console.log(e.target, e.currentTarget)
-//   })
-  
-// })
 }
 
 function render() {
   document.body.innerHTML = `
-  <div class="task-row-wrapper"
-    <div class="input-form">
-      <form action="">
-        <input type="text" class="text-input">
-        <button class="submit-button" type="button">
-        Add task
-        </button>
-      </form>
-    </div>
-    <div class="tasks-container">
+  <div class="task-row-wrapper">
+    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
       ${renderList()} 
     </div>
+    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  </div>
+  <div class="input-form">
+  <form action="">
+    <input type="text" class="text-input">
+    <button class="submit-button" type="button">
+    Add task
+    </button>
+  </form>
   </div>
   `;
 

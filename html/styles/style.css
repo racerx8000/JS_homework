@@ -1,9 +1,44 @@
+.task-row-wrapper  {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  height: 50vh;
+  width: 80vw;
+  margin: auto;
+}
+
+
+.tasks-container {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  height: 20vh;
+  width: 35vw;
+  background: lightsteelblue;
+  border-radius: 6px;
+  border: 2px solid black;
+}
+
+.input-form {
+  position: sticky;
+  bottom:0%
+  
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  list-style: none;
+  margin: auto;
+}
+
 .dropbtn {
   padding: 4px;
   border: 2px solid black;
   border-radius: 8px;
 }
-
 
 .dropdown {
   display: inline-block;
@@ -25,4 +60,3 @@
 }
 
 .dropdown:hover .dropdown-content {display: block};
-
