@@ -11,16 +11,44 @@ const colors = {
   blue: '#0f41f5',
   purple: '#9c57e6',
   black: '#000000',
-}
+};
 
 Object.freeze(colors);
-
 
 let tasks = [
   { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cook barbeque' },
   { id: uuidv4(), isCompleted: true, isEditing: false, color: undefined, content: 'cook WOK' },
   { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cycling' },
 ];
+
+const pageContent = {
+  todo: tasks,
+  inProcess: [],
+  done: [],
+};
+
+// function renderColumns(column) {
+//   return `
+//   <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+//   <h1 class="column-heading">${column}</h1>
+
+//   `
+// }
+
+
+
+function renderColumns(key, task) {
+  let columns =  key.map(column => {
+    return `
+    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h1 class="column-heading">'${column}'</h1>
+        ${renderListRow(task)}
+    </div>
+    `
+  });
+
+  return columns;
+}
 
 function drop(dropEvent) {
   dropEvent.target.append(selectedElement);
@@ -40,7 +68,7 @@ function changeColor(id, newClr) {
       return {...task, color: newClr};
     }
     return task;
-  })
+  });
 
   render();
 }
@@ -49,7 +77,7 @@ function deleteTask(id) {
   tasks = tasks.filter(task => {
     if (id === task.id) return null;
     return task;
-  })
+  });
 
   render();
 }
@@ -58,7 +86,7 @@ function editTask(id) {
   tasks = tasks.map(task => {
     if (id === task.id) return {...task, isEditing: true};
     return task;
-  })
+  });
   
   render();
 } 
@@ -69,7 +97,7 @@ function formOnBlur(id) {
   tasks = tasks.map(task => {
     if (id === task.id) return {...task, isEditing: false};
     return task;
-  })
+  });
 
   render();
 }
@@ -79,7 +107,7 @@ function saveEditedTask(id) {
   tasks = tasks.map(task => {
     if (id === task.id) return {...task, isEditing: false, content: editedContent};
     return task;
-  })
+  });
 
   render();
 }
@@ -89,10 +117,9 @@ function editableRow({id, content, isCompleted, isEditing}) {
     <input  onblur="formOnBlur('${id}')" type="text" class="text-edit" value="${content}">
     <button onclick="saveEditedTask('${id}')" class="save-button" type="button">💾</button>
   `;
-  
+
   return isCompleted ? `<s>${content}</s>` : `<span onclick="editTask('${id}')">${content}</span>`;
 }
-
 
 function renderListRow(task) {
   const { id, isCompleted, color } = task;
@@ -115,22 +142,18 @@ function renderListRow(task) {
         X
       </button>
     </li>
-  `
+  `;
 }
 
 function renderList() {
-  const todo = tasks.map(task => `${renderListRow(task)}`).join('');
-
-  return `
-    <ul>
-      ${todo}
-    </ul>
-  `
+  for (let [key, task] of Object.entries(pageContent)) {
+    return renderColumns(key, task);
+  }
 }
 
 function changeState(id) {
   tasks = tasks.map(task => {
-    if (id === task.id) return { ...task, isCompleted: !task.isCompleted }
+    if (id === task.id) return { ...task, isCompleted: !task.isCompleted };
     return task;
   });
 
@@ -147,16 +170,18 @@ function setListeners() {
   });
 
   const saveButton = document.querySelector('.save-button');
-  if (saveButton) saveButton.addEventListener('mousedown', event => {
-    event.preventDefault();
-  });
+  if (saveButton) {
+    saveButton.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+    });
+  }
 }
 
 function render() {
   document.body.innerHTML = `
   <div class="task-row-wrapper">
     <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
-      ${renderList()} 
+      ${renderList()}
     </div>
     <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
   </div>
@@ -170,7 +195,7 @@ function render() {
   </div>
   `;
 
-  setListeners()
+  setListeners();
 }
 
 render();
