@@ -1,4 +1,9 @@
-// ----------------Javascript begins-----------------------------
+// let tasks = [
+//   { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cook barbeque' },
+//   { id: uuidv4(), isCompleted: true, isEditing: false, color: undefined, content: 'cook WOK' },
+//   { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cycling' },
+// ];
+
 
 function uuidv4() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -15,14 +20,12 @@ const colors = {
 
 Object.freeze(colors);
 
-let tasks = [
-  { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cook barbeque' },
-  { id: uuidv4(), isCompleted: true, isEditing: false, color: undefined, content: 'cook WOK' },
-  { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cycling' },
-];
-
 const pageContent = {
-  todo: tasks,
+  todo: [
+    { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cook barbeque' },
+    { id: uuidv4(), isCompleted: true, isEditing: false, color: undefined, content: 'cook WOK' },
+    { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cycling' },
+  ],
   inProcess: [],
   done: [],
 };
@@ -36,20 +39,29 @@ function renderTasks(value) {
 
 function renderColumns(key, value) {
   return `
-  <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+  <div name="${key}" class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
     <h1 class="column-heading">${key}</h1>
     ${renderTasks(value)}
   </div>
   `;
 }
 
+let dragFrom;
+let dragItem;
+
+
 function drop(dropEvent) {
-  dropEvent.target.append(selectedElement);
+  // dropEvent.target.append(selectedElement);
+
+  item = pageContent[dragFrom].find(item => item.id == dragItem.id)
+  dropEvent.target.getAttribute('name')
 }
 
 function drag(dragStartEvent) {
-  selectedElement = dragStartEvent.target;
+  dragItem = dragStartEvent.target;
+  dragFrom = dragStartEvent.target.parentElement.getAttribute('name');
 }
+
 
 function allowDrop(allowDropEvent) {
   allowDropEvent.preventDefault();
@@ -139,9 +151,7 @@ function renderListRow(task) {
 }
 
 function renderList() {
-  for (let [key, task] of Object.entries(pageContent)) {
-    return renderColumns(key, task);
-  }
+  return Object.entries(pageContent).map(([key, task]) => renderColumns(key, task)).join('');
 }
 
 function changeState(id) {
