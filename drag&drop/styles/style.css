@@ -1,0 +1,30 @@
+.flex-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  width: 500px;
+  margin: auto;
+  list-style: none;
+}
+
+.flex-item {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  width: 150px;
+  height: 120px;
+  background-color:lightsteelblue;
+  border: 1px solid black;
+  border-radius: 6px;
+  opacity: 0.80;
+}
+
+.draggable-elem {
+  height: 26px;
+  width: 26px;
+  border: 1px solid black;
+  border-radius: 50%;
+  background: chartreuse;
+  margin: 8px;
+}
