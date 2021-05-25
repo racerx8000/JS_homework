@@ -27,27 +27,20 @@ const pageContent = {
   done: [],
 };
 
-// function renderColumns(column) {
-//   return `
-//   <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
-//   <h1 class="column-heading">${column}</h1>
+function renderTasks(value) {
+  const taskList = value.map(task => `${renderListRow(task)}`).join('');
+  return `
+    ${taskList}
+  `
+}
 
-//   `
-// }
-
-
-
-function renderColumns(key, task) {
-  let columns =  key.map(column => {
-    return `
-    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h1 class="column-heading">'${column}'</h1>
-        ${renderListRow(task)}
-    </div>
-    `
-  });
-
-  return columns;
+function renderColumns(key, value) {
+  return `
+  <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <h1 class="column-heading">${key}</h1>
+    ${renderTasks(value)}
+  </div>
+  `;
 }
 
 function drop(dropEvent) {
@@ -180,10 +173,7 @@ function setListeners() {
 function render() {
   document.body.innerHTML = `
   <div class="task-row-wrapper">
-    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)">
       ${renderList()}
-    </div>
-    <div class="tasks-container" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
   </div>
   <div class="input-form">
   <form action="">
