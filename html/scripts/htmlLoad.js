@@ -14,7 +14,7 @@ const colors = {
 
 Object.freeze(colors);
 
-const pageContent = {
+let pageContent = {
   todo: [
     { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: 'cook barbeque' },
     { id: uuidv4(), isCompleted: true, isEditing: false, color: undefined, content: 'cook WOK' },
@@ -23,6 +23,20 @@ const pageContent = {
   inProcess: [],
   done: [],
 };
+
+function saveData() {
+  const savedData = JSON.stringify(pageContent);
+  localStorage.setItem('data', savedData);
+  console.log(savedData);
+}
+
+function loadData() {
+  const data = localStorage.getItem('data')
+  if (!data) return render();
+  pageContent = JSON.parse(data);
+  console.log(data);
+  render()
+}
 
 function renderTasks(columnName, value) {
   const taskList = value.map(task => `${renderListRow(columnName, task)}`).join('');
@@ -36,8 +50,24 @@ function renderColumns(columnName, value) {
     <div class="tasks-container" name="${columnName}" ondrop="drop('${columnName}')" ondragover="allowDrop(event)">
       <h1 class="column-heading">${columnName}</h1>
       ${renderTasks(columnName, value)}
+      <div class="input-form">
+      <form action="">
+        <input type="text" class="text-input">
+        <button class="submit-button" type="button" onclick="addTask(event, '${columnName}')">
+        Add task
+        </button>
+      </form>
+      </div>    
     </div>
   `;
+}
+
+function addTask(event, columnName) {
+  const data = event.target.parentElement.querySelector('.text-input').value;
+  const setNewData =  { id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: data };
+  pageContent[columnName].push(setNewData);
+  saveData();
+  render();
 }
 
 function moveTask(selectedElem, selectedElemId, dragFrom, dropTo) {
@@ -45,15 +75,8 @@ function moveTask(selectedElem, selectedElemId, dragFrom, dropTo) {
 
   pageContent[dragFrom] = restOFTasks;
   pageContent[dropTo].push(selectedElem);
+  saveData();
 }
-
-// поняти звідки почався drag - це dragFrom
-// знайти ід вибраного таску - це selectedElemId
-// зрозуміти куди ми хочемо перемістити таск - це dropTo
-// ------------------------------------------------------------
-// зберегти task у перемінну
-// видалити task з dragFrom де
-// перенести task у вибраний dropTo
 
 function drop(columnName) {
   dropTo = columnName;
@@ -79,14 +102,14 @@ function changeColor(id, newClr, columnName) {
     return task;
   });
   pageContent[columnName] = savedColor;
-
+  saveData();
   render();
 }
 
 function deleteTask(id, columnName) {
   const restOfTasks = pageContent[columnName].filter(task => task.id !== id);
   pageContent[columnName] = restOfTasks;
-
+  saveData();
   render();
 }
 
@@ -96,7 +119,7 @@ function editTask(id, columnName) {
     return task;
   });
   pageContent[columnName] = editedTask;
-
+  saveData();
   render();
 }
 
@@ -106,7 +129,7 @@ function formOnBlur(id, columnName) {
     return task;
   });
   pageContent[columnName] = rejectEditing;
-
+  saveData();
   render();
 }
 
@@ -117,7 +140,7 @@ function saveEditedTask(id, columnName) {
     return task;
   });
   pageContent[columnName] = saveContent;
-
+  saveData();
   render();
 }
 
@@ -141,9 +164,9 @@ function renderListRow(columnName, task) {
         <div class="dropdown-content">
           <p onclick="changeColor('${id}','${red}','${columnName}')"  style="background-color:${red}"></p>
           <p onclick="changeColor('${id}','${green}','${columnName}')" style="background-color:${green}"></p>
-          <p onclick="changeColor('${id}','${blue}''${columnName}')" style="background-color:${blue}"></p>
-          <p onclick="changeColor('${id}','${purple}''${columnName}')" style="background-color:${purple}"></p>
-          <p onclick="changeColor('${id}','${black}''${columnName}')" style="background-color:${black}"></p>
+          <p onclick="changeColor('${id}','${blue}','${columnName}')" style="background-color:${blue}"></p>
+          <p onclick="changeColor('${id}','${purple}','${columnName}')" style="background-color:${purple}"></p>
+          <p onclick="changeColor('${id}','${black}','${columnName}')" style="background-color:${black}"></p>
         </div>
       </span>
       <input onclick="changeState('${id}', '${columnName}')" class="task-state" type="checkbox" ${isCompleted ? 'checked' : ''}>
@@ -165,18 +188,11 @@ function changeState(id, columnName) {
     return task;
   });
   pageContent[columnName] = newState;
-
+  saveData();
   render();
 }
 
 function setListeners() {
-  document.querySelector('.submit-button').addEventListener('click', () => {
-    const data = document.querySelector('.text-input').value;
-    tasks = [...tasks, {id: uuidv4(), isCompleted: false, isEditing: false, color: undefined, content: data}];
-
-    render();
-  });
-
   const saveButton = document.querySelector('.save-button');
   if (saveButton) {
     saveButton.addEventListener('mousedown', (event) => {
@@ -190,17 +206,7 @@ function render() {
   <div class="task-row-wrapper">
     ${renderList()}
   </div>
-  <div class="input-form">
-  <form action="">
-    <input type="text" class="text-input">
-    <button class="submit-button" type="button">
-    Add task
-    </button>
-  </form>
-  </div>
   `;
 
   setListeners();
 }
-
-render();
