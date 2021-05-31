@@ -19,14 +19,8 @@
   border: 2px solid black;
 }
 
-.input-form {
-  position: sticky;
-  bottom:0%
-  
-}
-
-ul {
-  list-style-type: none;
+.column-heading {
+  margin: auto;
 }
 
 li {
