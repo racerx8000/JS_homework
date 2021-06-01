@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>drag&drop</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script defer src="scripts/script.js"></script>
+</head>
+<body>
+  <ul class="flex-container">
+    <li class="flex-item" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+    <li class="flex-item" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <figure class="draggable-elem" id="1" draggable="true" ondragstart="drag(event)" ></figure>
+      <figure class="draggable-elem" id="2" draggable="true" ondragstart="drag(event)" ></figure>
+      <figure class="draggable-elem" id="3" draggable="true" ondragstart="drag(event)" ></figure>
+      <figure class="draggable-elem" id="4" draggable="true" ondragstart="drag(event)" ></figure>
+      <figure class="draggable-elem" id="5" draggable="true" ondragstart="drag(event)" ></figure>
+</li>
+    <li class="flex-item" ondrop="drop(event)" ondragover="allowDrop(event)"></li>
+
+  </ul>
+</body>
+</html>
