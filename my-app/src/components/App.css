@@ -1,0 +1,56 @@
+.task-column-wrapper {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  height: 50vh;
+  width: 80vw;
+  margin: auto;
+
+}
+
+.tasks-container {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  height: 20vh;
+  width: 35vw;
+  background: rgba(172, 207, 255, 0.795);
+  border-radius: 6px;
+  border: 1px solid black;
+}
+
+.column-header {
+  margin: auto;
+}
+
+li {
+  list-style: none;
+  margin: auto;
+}
+
+.dropdown-trigger {
+  width: 14px;
+  height: 12px;
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: rgba(212, 209, 209, 0.589);
+  z-index: 1;
+}
+
+.dropdown-content p {
+  padding: 15px;
+  border-radius: 3px;
+  display: block;
+}
+
+.dropdown:hover .dropdown-content {display: block};
